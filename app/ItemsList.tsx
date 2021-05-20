@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, TextInput, View, Pressable, Text, Modal, TouchableHighlight, FlatList } from 'react-native';
+import { StyleSheet, TextInput, View, Text, Modal, TouchableHighlight, FlatList } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 interface ItemsListProps {
     sortProps: {
@@ -61,12 +62,13 @@ const ItemsList = (props: ItemsListProps) => {
                     value={props.searchTerm}
                     onChangeText={props.onSearch}
                     style={styles.searchInput} />
-                    <Pressable
-                        onPress={() => setModalVisible(true)}>
-                        <Image
-                            source={require('../images/sort.png')}
-                            style={styles.sortIcon} />
-                    </Pressable>
+                <View
+                    style={styles.sortIcon}>
+                    <Icon
+                        name="filter-outline"
+                        type="ionicon"
+                        onPress={() => setModalVisible(true)}/>
+                </View>
             </View>
             <View
                 style={styles.itemsListContainer}>
@@ -93,19 +95,18 @@ const styles = StyleSheet.create({
         marginLeft: '5%',
         marginRight: '5%',
         marginTop: 15,
+        justifyContent: 'space-between'
     },
     searchInput: {
         borderRadius: 50,
         borderColor: 'black',
         borderWidth: StyleSheet.hairlineWidth,
-        width: '85%',
+        width: '90%',
         paddingLeft: 15,
     },
     sortIcon: {
-        width: 40,
-        height: 40,
-        marginLeft: '2.5%',
-        alignSelf: 'center',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     itemsListContainer: {
         flexDirection: 'column',

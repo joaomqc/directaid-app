@@ -5,6 +5,7 @@ import {
     Text,
     View
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import ItemsList from '../../ItemsList';
 
 const storedEvents = [
@@ -122,10 +123,13 @@ const renderEvent = (event: any) => (
             </Text>
         </View>
         <View
-            style={styles.followIconContainer}>
-            <Image
-                source={require('../../../images/follow-icon.png')}
-                style={styles.followIcon}/>
+            style={styles.followIconContainer}>                            
+            <Icon
+                name={event.following
+                    ? "star"
+                    : "star-outline"}
+                type="ionicon"
+                size={50} />
         </View>
     </View>
 );
@@ -197,10 +201,6 @@ const styles= StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
         paddingRight: '5%',
-    },
-    followIcon: {
-        height: 50,
-        width: 50,
     },
 });
 

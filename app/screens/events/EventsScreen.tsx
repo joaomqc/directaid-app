@@ -4,6 +4,7 @@ import FavoritesScreen from './FavoritesScreen';
 import DiscoverScreen from './DiscoverScreen';
 import OrganizersScreen from './OrganizersScreen';
 import { Image, StyleSheet } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,30 +17,33 @@ const EventsScreen = () => {
                 name='Favorites'
                 component={FavoritesScreen}
                 options={{
-                    tabBarIcon: ({size}) => (
-                        <Image
-                            source={require('../../../images/follow-icon.png')}
-                            style={{width: size, height: size}} />
+                    tabBarIcon: ({size}) => (                            
+                        <Icon
+                            name="star"
+                            type="ionicon"
+                            size={size} />
                     )
                 }} />
             <Tab.Screen
                 name='Discover'
                 component={DiscoverScreen}
                 options={{
-                    tabBarIcon: ({size}) => (
-                        <Image
-                            source={require('../../../images/search.png')}
-                            style={{width: size, height: size}} />
+                    tabBarIcon: ({size}) => (                            
+                        <Icon
+                            name="search"
+                            type="ionicon"
+                            size={size} />
                     )
                 }} />
             <Tab.Screen
                 name='Organizers'
                 component={OrganizersScreen}
                 options={{
-                    tabBarIcon: ({size}) => (
-                        <Image
-                            source={require('../../../images/users.png')}
-                            style={{width: size, height: size}} />
+                    tabBarIcon: ({size}) => (                            
+                        <Icon
+                            name="people-outline"
+                            type="ionicon"
+                            size={size} />
                     )
                 }} />
         </Tab.Navigator>

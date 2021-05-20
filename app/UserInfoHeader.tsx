@@ -1,14 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Image, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 const UserInfoHeader = ({navigation}: any) => {
     return (
         <View style={styles.container}
             onTouchEnd={() => navigation.navigate('Profile')}>
-            <Image
-                source={require('../images/user.png')}
-                style={styles.userIcon} />
+            <Icon
+                name="person-circle-outline"
+                type="ionicon"
+                size={50}/>
             <Text
                 style={styles.userName}>
                 John Doe
@@ -23,11 +25,6 @@ const styles = StyleSheet.create({
         paddingBottom: 25,
         paddingTop: 25,
         paddingLeft: 10,
-    },
-    userIcon: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
     },
     userName: {
         alignSelf: 'center',
