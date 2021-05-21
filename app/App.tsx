@@ -2,12 +2,12 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import EventsScreen from './screens/events/EventsScreen';
-import ForumScreen from './screens/ForumScreen';
-import MessagesScreen from './screens/MessagesScreen';
-import MutualAidScreen from './screens/MutualAidScreen';
-import SidebarMenu from './SidebarMenu';
-import ProfileScreen from './screens/ProfileScreen';
+import EventsScreen from 'app/screens/events/EventsScreen';
+import ForumScreen from 'app/screens/ForumScreen';
+import MessagesScreen from 'app/screens/MessagesScreen';
+import MutualAidScreen from 'app/screens/MutualAidScreen';
+import SidebarMenu from 'app/SidebarMenu';
+import ProfileScreen from 'app/screens/ProfileScreen';
 
 const Drawer = createDrawerNavigator();
 

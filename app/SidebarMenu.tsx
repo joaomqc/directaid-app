@@ -1,7 +1,7 @@
-import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import React from 'react';
+import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import UserInfoHeader from './UserInfoHeader';
+import UserInfoHeader from 'app/UserInfoHeader';
 
 const CustomSidebarMenu = (props:DrawerContentComponentProps) => {
     const filteredProps = {

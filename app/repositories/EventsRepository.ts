@@ -1,6 +1,6 @@
-import IEvent from "../domain/event";
+import IEvent from "app/domain/event";
 
-var events = [
+var events: IEvent[] = [
     {
         id: 1,
         title: 'Protest',

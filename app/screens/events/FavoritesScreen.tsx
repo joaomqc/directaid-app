@@ -6,9 +6,9 @@ import {
     View
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import IEvent from '../../domain/event';
-import ItemsList from '../../ItemsList';
-import { getFavoriteEvents, updateEvent } from '../../repositories/EventsRepository';
+import IEvent from 'app/domain/event';
+import ItemsList from 'app/ItemsList';
+import { getFavoriteEvents, updateEvent } from 'app/repositories/EventsRepository';
 
 const sortProps = [
     {
