@@ -1,4 +1,4 @@
-import IEvent from "../domain/Event";
+import IEvent from "../domain/event";
 
 var events = [
     {

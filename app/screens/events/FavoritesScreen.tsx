@@ -6,7 +6,7 @@ import {
     View
 } from 'react-native';
 import { Icon } from 'react-native-elements';
-import IEvent from '../../domain/Event';
+import IEvent from '../../domain/event';
 import ItemsList from '../../ItemsList';
 import { getFavoriteEvents, updateEvent } from '../../repositories/EventsRepository';
 
