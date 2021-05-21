@@ -6,74 +6,9 @@ import {
     View
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import IEvent from '../../domain/Event';
 import ItemsList from '../../ItemsList';
-
-const storedEvents = [
-    {
-        title: 'Protest',
-        creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
-        location: 'City hall',
-        following: true,
-        picture: require('../../../images/placeholder-image.png')
-    },
-    {
-        title: 'Protest2',
-        creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
-        location: 'City hall',
-        following: true,
-        picture: require('../../../images/placeholder-image.png')
-    },
-    {
-        title: 'Protest3',
-        creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
-        location: 'City hall',
-        following: true,
-        picture: require('../../../images/placeholder-image.png')
-    },
-    {
-        title: 'Protest4',
-        creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
-        location: 'City hall',
-        following: true,
-        picture: require('../../../images/placeholder-image.png')
-    },
-    {
-        title: 'Protest5',
-        creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
-        location: 'City hall',
-        following: true,
-        picture: require('../../../images/placeholder-image.png')
-    },
-    {
-        title: 'Protest6',
-        creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
-        location: 'City hall',
-        following: true,
-        picture: require('../../../images/placeholder-image.png')
-    },
-    {
-        title: 'Protest7',
-        creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
-        location: 'City hall',
-        following: true,
-        picture: require('../../../images/placeholder-image.png')
-    },
-    {
-        title: 'Protest8',
-        creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
-        location: 'City hall',
-        following: true,
-        picture: require('../../../images/placeholder-image.png')
-    }
-]
+import { getFavoriteEvents, updateEvent } from '../../repositories/EventsRepository';
 
 const sortProps = [
     {
@@ -94,67 +29,70 @@ const sortProps = [
     },
 ];
 
-interface IEvent {
-    title: string,
-    creationDate: Date,
-    date: Date,
-    location: string,
-    following: boolean,
-    picture: NodeRequire
-}
-
-const renderEvent = (event: any) => (
-    <View
-        style={styles.eventContainer}>
-        <Image
-            source={event.picture}
-            style={styles.eventImage}/>
-        <View
-            style={styles.eventDetails}>
-            <Text
-                style={styles.eventTitle}>
-                {event.title}
-            </Text>
-            <Text>
-                {event.location}
-            </Text>
-            <Text>
-                {event.date.toLocaleDateString()}
-            </Text>
-        </View>
-        <View
-            style={styles.followIconContainer}>                            
-            <Icon
-                name={event.following
-                    ? "star"
-                    : "star-outline"}
-                type="ionicon"
-                size={50} />
-        </View>
-    </View>
-);
-
 const FavoritesScreen = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date')
-    const [events, setEvents]= useState<IEvent[]>([]);
+    const [events, setEvents] = useState<IEvent[]>([]);
     const [refreshing, setRefreshing] = useState(false);
+
+    const toggleFollow = (event: IEvent) => {
+        const updatedEvent = {
+            ...event,
+            following: !event.following
+        };
+
+        setEvents(events.map(evt => {
+            if (event.id == evt.id) {
+                return updatedEvent;
+            }
+
+            return evt;
+        }));
+
+        updateEvent(updatedEvent);
+    };
+
+    const renderEvent = (event: IEvent) => (
+        <View
+            style={styles.eventContainer}>
+            <Image
+                source={require('../../../images/placeholder-image.png')}
+                style={styles.eventImage} />
+            <View
+                style={styles.eventDetails}>
+                <Text
+                    style={styles.eventTitle}>
+                    {event.title}
+                </Text>
+                <Text>
+                    {event.location}
+                </Text>
+                <Text>
+                    {event.date.toLocaleDateString()}
+                </Text>
+            </View>
+            <View
+                style={styles.followIconContainer}>
+                <Icon
+                    name={event.following
+                        ? "star"
+                        : "star-outline"}
+                    type="ionicon"
+                    size={50}
+                    onPress={() => toggleFollow(event)} />
+            </View>
+        </View>
+    );
 
     const updateEvents = () => {
         setRefreshing(true);
-        const filteredEvents = 
-            searchTerm === ''
-                ? storedEvents
-                : storedEvents
-                    .filter(event => event.title.indexOf(searchTerm) > 0);
-    
-        const orderedEvents =
-            filteredEvents
-                .sort((event:any) => event[sortBy]);
-    
-        setEvents(orderedEvents);
-        setRefreshing(false);
+
+        getFavoriteEvents(searchTerm, sortBy)
+            .then((newEvents: IEvent[]) => {
+                setEvents(newEvents);
+                setRefreshing(false);
+            });
     }
 
     useEffect(() => {
@@ -163,7 +101,7 @@ const FavoritesScreen = () => {
 
     return (
         <View
-            style={{flex: 1}}>
+            style={{ flex: 1 }}>
             <ItemsList
                 sortProps={sortProps.map(sortProp => sortProp)}
                 items={events}
@@ -178,7 +116,7 @@ const FavoritesScreen = () => {
     );
 }
 
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
     eventContainer: {
         flexDirection: 'row',
         alignItems: 'center',
