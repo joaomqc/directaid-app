@@ -6,7 +6,7 @@ import EventsScreen from 'app/screens/events/EventsScreen';
 import ForumScreen from 'app/screens/ForumScreen';
 import MessagesScreen from 'app/screens/MessagesScreen';
 import MutualAidScreen from 'app/screens/MutualAidScreen';
-import SidebarMenu from 'app/SidebarMenu';
+import SidebarMenu from 'app/sidebar/SidebarMenu';
 import ProfileScreen from 'app/screens/ProfileScreen';
 
 const Drawer = createDrawerNavigator();

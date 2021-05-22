@@ -11,7 +11,10 @@ const EventsScreen = () => {
     return (
         <Tab.Navigator
             initialRouteName='Favorites'
-            backBehavior='none'>
+            backBehavior='none'
+            tabBarOptions={{
+               keyboardHidesTabBar: true
+            }}  >
             <Tab.Screen
                 name='Favorites'
                 component={FavoritesScreen}
