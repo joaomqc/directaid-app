@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, Modal, TouchableHighlight, FlatList } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { StyleSheet, TextInput, View, Text, Modal, TouchableHighlight, FlatList, PixelRatio } from 'react-native';
+import { Divider, Icon } from 'react-native-elements';
 
 interface ItemsListProps {
     sortProps: {
@@ -14,7 +14,7 @@ interface ItemsListProps {
     onSearch: (searchTerm: string) => void,
     searchTerm: string,
     onRefresh: () => void,
-    refreshing: boolean,
+    refreshing: boolean
 }
 
 const ItemsList = (props: ItemsListProps) => {
@@ -23,7 +23,7 @@ const ItemsList = (props: ItemsListProps) => {
 
     return (
         <View
-            style={{flex: 1}}>
+            style={{ flex: 1 }}>
             <Modal
                 animationType='fade'
                 transparent={true}
@@ -34,7 +34,7 @@ const ItemsList = (props: ItemsListProps) => {
                 <View style={styles.centeredView}
                     onTouchEnd={() => setModalVisible(false)}>
                     <View style={styles.modalView}>
-                        {props.sortProps.map((sortProp, i) => (                        
+                        {props.sortProps.map((sortProp, i) => (
                             <TouchableHighlight
                                 key={sortProp.label}
                                 onPress={() => {
@@ -47,14 +47,14 @@ const ItemsList = (props: ItemsListProps) => {
                                         ? {
                                             marginBottom: 0,
                                         }
-                                        : { }
+                                        : {}
                                 ]}
                                 underlayColor='rgba(240, 248, 255, 0.8)'>
                                 <Text>{sortProp.label}</Text>
                             </TouchableHighlight>
                         ))}
                     </View>
-                  </View>
+                </View>
             </Modal>
             <View style={styles.searchContainer}>
                 <TextInput
@@ -67,17 +67,19 @@ const ItemsList = (props: ItemsListProps) => {
                     <Icon
                         name="filter-outline"
                         type="ionicon"
-                        onPress={() => setModalVisible(true)}/>
+                        onPress={() => setModalVisible(true)} />
                 </View>
             </View>
             <View
                 style={styles.itemsListContainer}>
                 <FlatList
                     data={props.items}
-                    renderItem={({item}) => (
+                    renderItem={({ item }) => (
                         <View
-                            style={styles.itemContainer}>
+                        style={styles.itemContainer}>
                             {props.render(item)}
+                            {item !== props.items[props.items.length - 1] &&
+                                <Divider />}
                         </View>
                     )}
                     keyExtractor={props.keyExtractor}
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     searchInput: {
         borderRadius: 50,
         borderColor: 'black',
-        borderWidth: StyleSheet.hairlineWidth,
+        borderWidth: PixelRatio.getPixelSizeForLayoutSize(StyleSheet.hairlineWidth),
         width: '90%',
         paddingLeft: 15,
     },
@@ -114,13 +116,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     itemContainer: {
-        marginLeft: '5%',
-        marginRight: '5%',
-        marginBottom: 15,
-        padding: 5,
-        borderRadius: 10,
         height: 100,
-        borderWidth: StyleSheet.hairlineWidth,
     },
     modalTextContainer: {
         paddingTop: 10,
@@ -128,26 +124,26 @@ const styles = StyleSheet.create({
         paddingLeft: 30,
     },
     centeredView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.75)'
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)'
     },
     modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 10,
-      paddingTop: 10,
-      paddingBottom: 10,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-      width: '50%'
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        width: '50%'
     },
 })
 

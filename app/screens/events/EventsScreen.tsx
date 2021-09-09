@@ -1,8 +1,9 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator, BottomTabBar } from '@react-navigation/bottom-tabs';
 import FavoritesScreen from 'app/screens/events/FavoritesScreen';
 import DiscoverScreen from 'app/screens/events/DiscoverScreen';
 import OrganizersScreen from 'app/screens/events/OrganizersScreen';
+import EventScreen from 'app/screens/events/EventScreen';
 import { Icon } from 'react-native-elements';
 
 const Tab = createBottomTabNavigator();
@@ -13,41 +14,58 @@ const EventsScreen = () => {
             initialRouteName='Favorites'
             backBehavior='none'
             tabBarOptions={{
-               keyboardHidesTabBar: true
-            }}  >
+                keyboardHidesTabBar: true,
+                showLabel: false
+            }}
+            screenOptions={({ route }) => ({
+              tabBarButton: [
+                "Event"
+              ].includes(route.name)
+                ? () => {
+                    return null;
+                  }
+                : undefined,
+            })}
+            >
             <Tab.Screen
                 name='Favorites'
                 component={FavoritesScreen}
                 options={{
-                    tabBarIcon: ({size}) => (                            
+                    tabBarIcon: ({ size, color }) => (
                         <Icon
                             name="star"
                             type="ionicon"
-                            size={size} />
+                            size={size}
+                            color={color} />
                     )
                 }} />
             <Tab.Screen
                 name='Discover'
                 component={DiscoverScreen}
                 options={{
-                    tabBarIcon: ({size}) => (                            
+                    tabBarIcon: ({ size, color }) => (
                         <Icon
                             name="search"
                             type="ionicon"
-                            size={size} />
+                            size={size}
+                            color={color} />
                     )
                 }} />
             <Tab.Screen
                 name='Organizers'
                 component={OrganizersScreen}
                 options={{
-                    tabBarIcon: ({size}) => (                            
+                    tabBarIcon: ({ size, color }) => (
                         <Icon
                             name="people-outline"
                             type="ionicon"
-                            size={size} />
+                            size={size}
+                            color={color} />
                     )
                 }} />
+            <Tab.Screen
+                name='Event'
+                component={EventScreen} />
         </Tab.Navigator>
     );
 }

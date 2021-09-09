@@ -1,6 +1,6 @@
 import React from 'react';
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { PixelRatio, SafeAreaView, StyleSheet, View } from 'react-native';
 import UserInfoHeader from 'app/sidebar/UserInfoHeader';
 
 const CustomSidebarMenu = (props:DrawerContentComponentProps) => {
@@ -23,7 +23,7 @@ const CustomSidebarMenu = (props:DrawerContentComponentProps) => {
         <View
             style={{
                 backgroundColor: 'black',
-                height: StyleSheet.hairlineWidth,
+                height: PixelRatio.getPixelSizeForLayoutSize(StyleSheet.hairlineWidth),
             }}
         />
         <DrawerContentScrollView {...filteredProps}>
