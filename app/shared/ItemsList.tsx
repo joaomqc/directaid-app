@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, Modal, TouchableHighlight, FlatList, PixelRatio } from 'react-native';
-import { Divider, Icon } from 'react-native-elements';
+import { StyleSheet, View, FlatList } from 'react-native';
+import { Button, Divider, Icon, Overlay, SearchBar } from 'react-native-elements';
+import { SearchBarBaseProps } from 'react-native-elements/dist/searchbar/SearchBar';
+
+const SafeSearchBar = (SearchBar as unknown) as React.FC<SearchBarBaseProps & { lightTheme: boolean, round: boolean }>;
 
 interface ItemsListProps {
     sortProps: {
@@ -11,7 +14,7 @@ interface ItemsListProps {
     render: (item: any) => React.ReactElement,
     keyExtractor: (item: any) => string,
     onSort: (sortBy: string) => void,
-    onSearch: (searchTerm: string) => void,
+    onSearch: (text: string) => void,
     searchTerm: string,
     onRefresh: () => void,
     refreshing: boolean
@@ -24,64 +27,48 @@ const ItemsList = (props: ItemsListProps) => {
     return (
         <View
             style={{ flex: 1 }}>
-            <Modal
-                animationType='fade'
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
+            <Overlay
+                animationType="fade"
+                backdropStyle={styles.overlayBackdrop}
+                overlayStyle={styles.overlay}
+                isVisible={modalVisible}
+                onBackdropPress={() => {
                     setModalVisible(!modalVisible);
                 }}>
-                <View style={styles.centeredView}
-                    onTouchEnd={() => setModalVisible(false)}>
-                    <View style={styles.modalView}>
-                        {props.sortProps.map((sortProp, i) => (
-                            <TouchableHighlight
-                                key={sortProp.label}
-                                onPress={() => {
-                                    setModalVisible(false);
-                                    props.onSort(sortProp.property);
-                                }}
-                                style={[
-                                    styles.modalTextContainer,
-                                    i === props.sortProps.length - 1
-                                        ? {
-                                            marginBottom: 0,
-                                        }
-                                        : {}
-                                ]}
-                                underlayColor='rgba(240, 248, 255, 0.8)'>
-                                <Text>{sortProp.label}</Text>
-                            </TouchableHighlight>
-                        ))}
-                    </View>
-                </View>
-            </Modal>
+                {props.sortProps.map((sortProp) => (
+                    <Button
+                        key={sortProp.label}
+                        onPress={() => {
+                            setModalVisible(false);
+                            props.onSort(sortProp.property)
+                        }}
+                        title={sortProp.label}
+                        type='clear' />
+                ))}
+            </Overlay>
             <View style={styles.searchContainer}>
-                <TextInput
+                <SafeSearchBar
+                    platform='default'
                     placeholder='Search...'
                     value={props.searchTerm}
                     onChangeText={props.onSearch}
-                    style={styles.searchInput} />
-                <View
-                    style={styles.sortIcon}>
-                    <Icon
-                        name="filter-outline"
-                        type="ionicon"
-                        onPress={() => setModalVisible(true)} />
-                </View>
+                    lightTheme
+                    round
+                    inputContainerStyle={styles.searchInput}
+                    containerStyle={styles.searchBar}
+                />
+                <Icon
+                    name="filter-outline"
+                    type="ionicon"
+                    onPress={() => setModalVisible(true)} />
             </View>
             <View
                 style={styles.itemsListContainer}>
                 <FlatList
                     data={props.items}
-                    renderItem={({ item }) => (
-                        <View
-                        style={styles.itemContainer}>
-                            {props.render(item)}
-                            {item !== props.items[props.items.length - 1] &&
-                                <Divider />}
-                        </View>
-                    )}
+                    renderItem={({ item }) =>
+                        props.render(item)
+                    }
                     keyExtractor={props.keyExtractor}
                     onRefresh={props.onRefresh}
                     refreshing={props.refreshing} />
@@ -91,59 +78,31 @@ const ItemsList = (props: ItemsListProps) => {
 };
 
 const styles = StyleSheet.create({
+    overlay: {
+        width: '50%',
+        paddingLeft: 0,
+        paddingRight: 0,
+    },
+    overlayBackdrop: {
+        backgroundColor: 'rgba(0, 0, 0, .5)'
+    },
+    searchBar: {
+        width: '90%',
+        backgroundColor: 'transparent',
+        borderTopWidth: 0,
+        borderBottomWidth: 0
+    },
     searchContainer: {
         flexDirection: 'row',
-        height: 40,
-        marginLeft: '5%',
         marginRight: '5%',
-        marginTop: 15,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     searchInput: {
-        borderRadius: 50,
-        borderColor: 'black',
-        borderWidth: PixelRatio.getPixelSizeForLayoutSize(StyleSheet.hairlineWidth),
-        width: '90%',
-        paddingLeft: 15,
-    },
-    sortIcon: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        backgroundColor: 'lightgray'
     },
     itemsListContainer: {
-        flexDirection: 'column',
-        marginTop: 20,
         flex: 1,
-    },
-    itemContainer: {
-        height: 100,
-    },
-    modalTextContainer: {
-        paddingTop: 10,
-        paddingBottom: 10,
-        paddingLeft: 30,
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.75)'
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        paddingTop: 10,
-        paddingBottom: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        width: '50%'
     },
 })
 

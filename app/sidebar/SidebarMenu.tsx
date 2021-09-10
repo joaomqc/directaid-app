@@ -1,9 +1,11 @@
 import React from 'react';
-import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { PixelRatio, SafeAreaView, StyleSheet, View } from 'react-native';
+import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer';
+import { SafeAreaView } from 'react-native';
 import UserInfoHeader from 'app/sidebar/UserInfoHeader';
+import { Divider, ThemeProps, withTheme } from 'react-native-elements';
+import DrawerItemList from './DrawerItemList';
 
-const CustomSidebarMenu = (props:DrawerContentComponentProps) => {
+const CustomSidebarMenu = (props: DrawerContentComponentProps & ThemeProps<{}>) => {
     const filteredProps = {
         ...props,
         state: {
@@ -15,22 +17,20 @@ const CustomSidebarMenu = (props:DrawerContentComponentProps) => {
                 route => route.name !== 'Profile'
             ),
         },
+        activeTintColor: props.theme.colors?.primary,
+        inactiveTintColor: props.theme.colors?.primary,
+        pressColor: props.theme.colors?.primary
     };
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <UserInfoHeader {...props} />
-        <View
-            style={{
-                backgroundColor: 'black',
-                height: PixelRatio.getPixelSizeForLayoutSize(StyleSheet.hairlineWidth),
-            }}
-        />
-        <DrawerContentScrollView {...filteredProps}>
-            <DrawerItemList {...filteredProps} />
-        </DrawerContentScrollView>
-      </SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
+            <UserInfoHeader {...props} />
+            <Divider />
+            <DrawerContentScrollView>
+                <DrawerItemList {...filteredProps} />
+            </DrawerContentScrollView>
+        </SafeAreaView>
     );
 };
-  
-export default CustomSidebarMenu;
+
+export default withTheme(CustomSidebarMenu, "default");

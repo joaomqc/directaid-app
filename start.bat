@@ -1,2 +1,2 @@
-start npm start
-start npm run android
+start yarn start
+start yarn run android

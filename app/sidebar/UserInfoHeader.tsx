@@ -1,35 +1,32 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { StyleSheet } from 'react-native';
+import { Icon, Button } from 'react-native-elements';
 
-const UserInfoHeader = ({navigation}: any) => {
+const UserInfoHeader = ({ navigation }: any) => {
     return (
-        <View style={styles.container}
-            onTouchEnd={() => navigation.navigate('Profile')}>
-            <Icon
+        <Button
+            icon={<Icon
                 name="person-circle-outline"
                 type="ionicon"
-                size={50}/>
-            <Text
-                style={styles.userName}>
-                John Doe
-            </Text>
-        </View>
+                size={50} />}
+            onPress={() => navigation.navigate('Profile')}
+            title="John Doe"
+            buttonStyle={styles.button}
+            titleStyle={styles.title}
+            type="clear" />
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection:'row',
+    button: {
         paddingBottom: 25,
         paddingTop: 25,
-        paddingLeft: 10,
+        justifyContent: 'flex-start',
     },
-    userName: {
-        alignSelf: 'center',
+    title: {
         marginLeft: 10,
-        fontSize: 20,
+        fontSize: 20
     }
 });
-  
+
 export default UserInfoHeader;

@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Image,
-    StyleSheet,
-    Text,
     View,
     Platform,
     TouchableNativeFeedback,
     TouchableHighlight
 } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, ListItem, Avatar } from 'react-native-elements';
 import IEvent from 'app/domain/event';
 import ItemsList from 'app/shared/ItemsList';
 import { getFavoriteEvents, updateEvent } from 'app/repositories/EventsRepository';
 import { useNavigation } from '@react-navigation/native';
+import { NavigationProp } from '@react-navigation/native';
+import NavigationParamList from 'app/shared/NavigationParamList';
 
 const sortProps = [
     {
@@ -38,9 +37,11 @@ const Component = Platform.select<typeof React.Component>({
     default: TouchableHighlight,
 });
 
+type EventScreenProp = NavigationProp<NavigationParamList, 'Event'>;
+
 const FavoritesScreen = () => {
 
-    const navigation = useNavigation();
+    const eventNavigation = useNavigation<EventScreenProp>();
 
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date')
@@ -66,40 +67,27 @@ const FavoritesScreen = () => {
 
     const renderEvent = (event: IEvent) => (
 
-        <Component
-            underlayColor='rgba(0, 0, 0, 0.1)'
-            onPress={() => { navigation.navigate('Event') }}>
-            <View
-                style={styles.eventContainer}>
-                <Image
-                    source={require('../../../images/placeholder-image.png')}
-                    style={styles.eventImage} />
-                <View
-                    style={styles.eventDetails}>
-                    <Text
-                        style={styles.eventTitle}>
-                        {event.title}
-                    </Text>
-                    <Text>
-                        {event.location}
-                    </Text>
-                    <Text>
-                        {event.date.toLocaleDateString()}
-                    </Text>
-                </View>
-                <View
-                    style={styles.followIconContainer}>
-                    <Icon
-                        name={event.following
-                            ? "star"
-                            : "star-outline"}
-                        type="ionicon"
-                        size={50}
-                        color="gold"
-                        onPress={() => toggleFollow(event)} />
-                </View>
-            </View>
-        </Component>
+        <ListItem
+            bottomDivider
+            onPress={() => { eventNavigation.navigate('Event') }}
+            Component={Component}>
+            <Avatar
+                size="large"
+                source={require('../../../images/placeholder-image.png')} />
+            <ListItem.Content>
+                <ListItem.Title>{event.title}</ListItem.Title>
+                <ListItem.Subtitle>{event.location}</ListItem.Subtitle>
+                <ListItem.Subtitle>{event.date.toLocaleDateString()}</ListItem.Subtitle>
+            </ListItem.Content>
+            <Icon
+                name={event.following
+                    ? "star"
+                    : "star-outline"}
+                type="ionicon"
+                size={40}
+                color="gold"
+                onPress={() => toggleFollow(event)} />
+        </ListItem>
     );
 
     const updateEvents = () => {
@@ -132,32 +120,5 @@ const FavoritesScreen = () => {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    eventContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        height: '100%'
-    },
-    eventDetails: {
-        flexDirection: 'column',
-        marginLeft: 10,
-    },
-    eventTitle: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        marginBottom: -5,
-    },
-    eventImage: {
-        height: 80,
-        width: 80,
-        borderRadius: 10,
-    },
-    followIconContainer: {
-        flex: 1,
-        alignItems: 'flex-end',
-        paddingRight: '5%',
-    },
-});
 
 export default FavoritesScreen;
