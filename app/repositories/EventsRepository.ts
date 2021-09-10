@@ -1,11 +1,11 @@
-import IEvent from "app/domain/event";
+import Event from "app/domain/event";
 
-var events: IEvent[] = [
+const events: Event[] = [
     {
         id: 1,
         title: 'Protest',
         creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: new Date(new Date().setDate(new Date().getDate() + 1)),
         location: 'City hall',
         following: true,
         picture: '',
@@ -15,7 +15,7 @@ var events: IEvent[] = [
         id: 2,
         title: 'Protest2',
         creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: new Date(new Date().setDate(new Date().getDate() + 2)),
         location: 'City hall',
         following: true,
         picture: '',
@@ -25,7 +25,7 @@ var events: IEvent[] = [
         id: 3,
         title: 'Protest3',
         creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: new Date(new Date().setDate(new Date().getDate() + 3)),
         location: 'City hall',
         following: false,
         picture: '',
@@ -35,7 +35,7 @@ var events: IEvent[] = [
         id: 4,
         title: 'Protest4',
         creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: new Date(new Date().setDate(new Date().getDate() + 4)),
         location: 'City hall',
         following: true,
         picture: '',
@@ -45,7 +45,7 @@ var events: IEvent[] = [
         id: 5,
         title: 'Protest5',
         creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: new Date(new Date().setDate(new Date().getDate() + 5)),
         location: 'City hall',
         following: true,
         picture: '',
@@ -55,7 +55,7 @@ var events: IEvent[] = [
         id: 6,
         title: 'Protest6',
         creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: new Date(new Date().setDate(new Date().getDate() + 6)),
         location: 'City hall',
         following: true,
         picture: '',
@@ -65,7 +65,7 @@ var events: IEvent[] = [
         id: 7,
         title: 'Protest7',
         creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: new Date(new Date().setDate(new Date().getDate() + 7)),
         location: 'City hall',
         following: false,
         picture: '',
@@ -75,7 +75,7 @@ var events: IEvent[] = [
         id: 8,
         title: 'Protest8',
         creationDate: new Date(Date.now()),
-        date: new Date(Date.now()),
+        date: new Date(new Date().setDate(new Date().getDate() + 8)),
         location: 'City hall',
         following: true,
         picture: '',
@@ -83,26 +83,36 @@ var events: IEvent[] = [
     }
 ]
 
-export const getFavoriteEvents = (searchTerm: string, sortBy: string): Promise<IEvent[]> => {
-    const favoriteEvents = events
-        .filter(event => event.following);
+export const getFavoriteEvents = (searchTerm: string, sortBy: string): Promise<Event[]> => {
+    return searchEvents(searchTerm, sortBy, (event: Event) => event.following);
+}
 
-    const filteredEvents =
+export const getEvents = (searchTerm: string, sortBy: string): Promise<Event[]> => {
+    return searchEvents(searchTerm, sortBy);
+}
+
+const searchEvents = (searchTerm: string, sortBy: string, filter?: (event: Event) => boolean): Promise<Event[]> => {
+
+    const filteredEvents = !filter
+        ? [...events]
+        : events.filter(filter);
+
+    const searchedEvents =
         !searchTerm
-            ? favoriteEvents
-            : favoriteEvents
-                .filter(event => event.title.indexOf(searchTerm) > 0);
+            ? filteredEvents
+            : filteredEvents
+                .filter(event => event.title.indexOf(searchTerm) >= 0);
 
     const orderedEvents =
-        filteredEvents
-            .sort((event: IEvent) => event[sortBy]);
+        searchedEvents
+            .sort((a: Event, b: Event) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0));
 
     return new Promise((resolve) => {
         resolve(orderedEvents);
     });
 }
 
-export const updateEvent = (event: IEvent): Promise<void> => {
+export const updateEvent = (event: Event): Promise<void> => {
     const index = events.findIndex(evt => evt.id == event.id);
     events[index] = event;
 

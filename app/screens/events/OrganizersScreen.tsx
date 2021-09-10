@@ -6,7 +6,7 @@ import {
     TouchableHighlight
 } from 'react-native';
 import { Icon, ListItem, Avatar } from 'react-native-elements';
-import IOrganizer from 'app/domain/organizer';
+import Organizer from 'app/domain/organizer';
 import ItemsList from 'app/shared/ItemsList';
 import { getFavoriteOrganizers, updateOrganizer } from 'app/repositories/OrganizersRepository';
 import { useNavigation } from '@react-navigation/native';
@@ -41,10 +41,10 @@ const OrganizersScreen = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('name')
-    const [organizers, setOrganizers] = useState<IOrganizer[]>([]);
+    const [organizers, setOrganizers] = useState<Organizer[]>([]);
     const [refreshing, setRefreshing] = useState(false);
 
-    const toggleFollow = (organizer: IOrganizer) => {
+    const toggleFollow = (organizer: Organizer) => {
         const updatedOrganizer = {
             ...organizer,
             following: !organizer.following
@@ -61,7 +61,7 @@ const OrganizersScreen = () => {
         updateOrganizer(updatedOrganizer);
     };
 
-    const renderEvent = (organizer: IOrganizer) => (
+    const renderEvent = (organizer: Organizer) => (
 
         <ListItem
             bottomDivider
@@ -88,7 +88,7 @@ const OrganizersScreen = () => {
         setRefreshing(true);
 
         getFavoriteOrganizers(searchTerm, sortBy)
-            .then((newOrganizers: IOrganizer[]) => {
+            .then((newOrganizers: Organizer[]) => {
                 setOrganizers(newOrganizers);
                 setRefreshing(false);
             });

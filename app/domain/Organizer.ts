@@ -1,4 +1,4 @@
-export default interface IEvent {
+type Organizer = {
     id: number,
     name: string,
     creationDate: Date,
@@ -7,3 +7,5 @@ export default interface IEvent {
     followers: number,
     [propName: string]: any,
 }
+
+export default Organizer;

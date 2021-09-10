@@ -17,7 +17,8 @@ interface ItemsListProps {
     onSearch: (text: string) => void,
     searchTerm: string,
     onRefresh: () => void,
-    refreshing: boolean
+    refreshing: boolean,
+    children?: JSX.Element | JSX.Element[];
 }
 
 const ItemsList = (props: ItemsListProps) => {
@@ -62,17 +63,20 @@ const ItemsList = (props: ItemsListProps) => {
                     type="ionicon"
                     onPress={() => setModalVisible(true)} />
             </View>
-            <View
-                style={styles.itemsListContainer}>
-                <FlatList
-                    data={props.items}
-                    renderItem={({ item }) =>
-                        props.render(item)
-                    }
-                    keyExtractor={props.keyExtractor}
-                    onRefresh={props.onRefresh}
-                    refreshing={props.refreshing} />
-            </View>
+            {(!props.children || !!props.searchTerm)
+                ? <View
+                    style={styles.itemsListContainer}>
+                    <FlatList
+                        data={props.items}
+                        renderItem={({ item }) =>
+                            props.render(item)
+                        }
+                        keyExtractor={props.keyExtractor}
+                        onRefresh={props.onRefresh}
+                        refreshing={props.refreshing} />
+                </View>
+                : props.children
+            }
         </View>
     );
 };
@@ -95,6 +99,7 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: 'row',
         marginRight: '5%',
+        marginLeft: '2.5%',
         justifyContent: 'space-between',
         alignItems: 'center'
     },

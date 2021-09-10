@@ -1,6 +1,6 @@
-import IOrganizer from "app/domain/organizer";
+import Organizer from "app/domain/organizer";
 
-var organizers: IOrganizer[] = [
+var organizers: Organizer[] = [
     {
         id: 1,
         name: 'Porto Mutual Aid',
@@ -27,7 +27,7 @@ var organizers: IOrganizer[] = [
     }
 ]
 
-export const getFavoriteOrganizers = (searchTerm: string, sortBy: string): Promise<IOrganizer[]> => {
+export const getFavoriteOrganizers = (searchTerm: string, sortBy: string): Promise<Organizer[]> => {
     const favoriteOrganizers = organizers
         .filter(organizer => organizer.following);
 
@@ -39,14 +39,14 @@ export const getFavoriteOrganizers = (searchTerm: string, sortBy: string): Promi
 
     const orderedOrganizers =
         filteredOrganizers
-            .sort((organizer: IOrganizer) => organizer[sortBy]);
+            .sort((organizer: Organizer) => organizer[sortBy]);
 
     return new Promise((resolve) => {
         resolve(orderedOrganizers);
     });
 }
 
-export const updateOrganizer = (organizer: IOrganizer): Promise<void> => {
+export const updateOrganizer = (organizer: Organizer): Promise<void> => {
     const index = organizers.findIndex(org => org.id == organizer.id);
     organizers[index] = organizer;
 
