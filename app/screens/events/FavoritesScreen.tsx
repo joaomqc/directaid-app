@@ -15,7 +15,7 @@ import NavigationParamList from 'app/shared/NavigationParamList';
 
 const sortProps = [
     {
-        label: 'Alphabetical',
+        label: 'By Name',
         property: 'title'
     },
     {
@@ -108,7 +108,7 @@ const FavoritesScreen = () => {
         <View
             style={{ flex: 1 }}>
             <ItemsList
-                sortProps={sortProps.map(sortProp => sortProp)}
+                sortProps={sortProps}
                 items={events}
                 render={renderEvent}
                 keyExtractor={event => event.title + event.creationDate}

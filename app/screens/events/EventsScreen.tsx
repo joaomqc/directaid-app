@@ -6,6 +6,7 @@ import DiscoverScreen from 'app/screens/events/DiscoverScreen';
 import OrganizersScreen from 'app/screens/events/OrganizersScreen';
 import EventScreen from 'app/screens/events/EventScreen';
 import { Icon, ThemeProps, withTheme } from 'react-native-elements';
+import OrganizerScreen from 'app/screens/events/OrganizerScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -75,6 +76,7 @@ const EventsStack = () => {
             screenOptions={{ headerShown: false }}>
             <Stack.Screen name="EventsTabs" component={EventsScreen} />
             <Stack.Screen name="Event" component={EventScreen} />
+            <Stack.Screen name="Organizer" component={OrganizerScreen} />
         </Stack.Navigator>
     )
 };

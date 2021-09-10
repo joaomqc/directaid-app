@@ -1,5 +1,6 @@
 type NavigationParamList = {
-    Event: undefined
+    Event: undefined,
+    Organizer: undefined
 }
 
 export default NavigationParamList;
