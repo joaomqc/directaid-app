@@ -6,12 +6,13 @@ import {
     TouchableHighlight,
     StyleSheet
 } from 'react-native';
-import { Icon, ListItem, Avatar } from 'react-native-elements';
+import { ListItem, Avatar } from 'react-native-elements';
 import Event from 'app/domain/event';
 import ItemsList from 'app/shared/ItemsList';
 import { updateEvent } from 'app/repositories/EventsRepository';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import NavigationParamList from 'app/shared/NavigationParamList';
+import FollowIcon from 'app/shared/FollowIcon';
 
 const sortProps = [
     {
@@ -69,7 +70,7 @@ const EventsList = ({ events, onUpdateList, onUpdateEvent, refreshing, children 
 
         <ListItem
             bottomDivider
-            onPress={() => { eventNavigation.navigate('Event') }}
+            onPress={() => { eventNavigation.navigate('Event', { eventId: event.id }) }}
             Component={Component}
         >
             <Avatar
@@ -80,14 +81,9 @@ const EventsList = ({ events, onUpdateList, onUpdateEvent, refreshing, children 
                 <ListItem.Subtitle>{event.location}</ListItem.Subtitle>
                 <ListItem.Subtitle>{event.date.toLocaleDateString()}</ListItem.Subtitle>
             </ListItem.Content>
-            <Icon
-                name={event.following
-                    ? "star"
-                    : "star-outline"}
-                type="ionicon"
-                size={40}
-                color="gold"
-                onPress={() => toggleFollow(event)} />
+            <FollowIcon
+                following={event.following}
+                toggleFollow={() => toggleFollow(event)} />
         </ListItem>
     );
 

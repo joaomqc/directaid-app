@@ -10,6 +10,10 @@ const events: Event[] = [
         following: true,
         picture: '',
         followers: 5,
+        organizer: {
+            id: 1,
+            name: 'Porto Mutual Aid',
+        }
     },
     {
         id: 2,
@@ -20,6 +24,10 @@ const events: Event[] = [
         following: true,
         picture: '',
         followers: 10,
+        organizer: {
+            id: 1,
+            name: 'Porto Mutual Aid',
+        }
     },
     {
         id: 3,
@@ -30,6 +38,10 @@ const events: Event[] = [
         following: false,
         picture: '',
         followers: 7,
+        organizer: {
+            id: 1,
+            name: 'Porto Mutual Aid',
+        }
     },
     {
         id: 4,
@@ -40,6 +52,10 @@ const events: Event[] = [
         following: true,
         picture: '',
         followers: 1,
+        organizer: {
+            id: 2,
+            name: 'Rebellion Group',
+        }
     },
     {
         id: 5,
@@ -50,6 +66,10 @@ const events: Event[] = [
         following: true,
         picture: '',
         followers: 15,
+        organizer: {
+            id: 2,
+            name: 'Rebellion Group',
+        }
     },
     {
         id: 6,
@@ -60,6 +80,10 @@ const events: Event[] = [
         following: true,
         picture: '',
         followers: 8,
+        organizer: {
+            id: 2,
+            name: 'Rebellion Group',
+        }
     },
     {
         id: 7,
@@ -70,6 +94,10 @@ const events: Event[] = [
         following: false,
         picture: '',
         followers: 11,
+        organizer: {
+            id: 3,
+            name: 'Better Town',
+        }
     },
     {
         id: 8,
@@ -80,6 +108,10 @@ const events: Event[] = [
         following: true,
         picture: '',
         followers: 3,
+        organizer: {
+            id: 3,
+            name: 'Better Town',
+        }
     }
 ]
 
@@ -117,4 +149,16 @@ export const updateEvent = (event: Event): Promise<void> => {
     events[index] = event;
 
     return Promise.resolve();
+}
+
+export const getEvent = (eventId: number): Promise<Event | null> => {
+    const event = events.find(event => event.id === eventId);
+
+    if(!event){
+        return Promise.resolve(null);
+    }
+
+    return Promise.resolve({
+        ...event
+    });
 }

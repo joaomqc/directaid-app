@@ -20,6 +20,9 @@ const theme = {
     Icon: {
         color: 'orange'
     },
+    SpeedDial: {
+        color: 'orange'
+    }
 };
 
 const App = () => {

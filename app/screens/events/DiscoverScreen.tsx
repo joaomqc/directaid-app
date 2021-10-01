@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList, Platform, TouchableNativeFeedback, TouchableHighlight } from 'react-native';
 import { Card, ListItem } from 'react-native-elements';
 import Event from 'app/domain/Event';
@@ -18,6 +18,17 @@ type EventScreenProp = NavigationProp<NavigationParamList, 'Event'>;
 const DiscoverScreen = () => {
 
     const eventNavigation = useNavigation<EventScreenProp>();
+
+    const [organizerEvents, setOrganizerEvents] = useState<Event[]>([]);
+    const [popularEvents, setPopularEvents] = useState<Event[]>([]);
+
+    useEffect(() => {
+        getEvents('', 'date')
+            .then((newEvents: Event[]) => {
+                setOrganizerEvents(newEvents);
+                setPopularEvents(newEvents);
+            });
+    }, []);
 
     const [events, setEvents] = useState<Event[]>([]);
     const [refreshing, setRefreshing] = useState(false);
@@ -46,13 +57,13 @@ const DiscoverScreen = () => {
         }));
     }
 
-    const renderList = () => (
+    const renderList = (events: Event[]) => (
         <FlatList
             horizontal
-            data={[{ title: "Protest" }, { title: "Protest2" }, { title: "Protest3" }, { title: "Protest4" }, { title: "Protest5" }]}
+            data={events}
             renderItem={({ item }: any) =>
                 <ListItem
-                    onPress={() => { eventNavigation.navigate('Event') }}
+                    onPress={() => { eventNavigation.navigate('Event', { eventId: item.id }) }}
                     Component={Component} >
                     <ListItem.Content style={styles.listItem}>
                         <Avatar
@@ -62,7 +73,7 @@ const DiscoverScreen = () => {
                     </ListItem.Content>
                 </ListItem>
             }
-            keyExtractor={(item: any) => item.title} />
+            keyExtractor={(item: any) => item.id} />
     )
 
     return (
@@ -77,14 +88,14 @@ const DiscoverScreen = () => {
                         style={styles.cardTitle}>
                         From organizers you follow
                     </Card.Title>
-                    {renderList()}
+                    {renderList(organizerEvents)}
                 </Card>
                 <Card>
                     <Card.Title
                         style={styles.cardTitle}>
                         Popular events
                     </Card.Title>
-                    {renderList()}
+                    {renderList(popularEvents)}
                 </Card>
             </View>
         </EventsList>

@@ -5,13 +5,14 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight
 } from 'react-native';
-import { Icon, ListItem, Avatar } from 'react-native-elements';
+import { ListItem, Avatar } from 'react-native-elements';
 import Organizer from 'app/domain/organizer';
 import ItemsList from 'app/shared/ItemsList';
 import { getFavoriteOrganizers, updateOrganizer } from 'app/repositories/OrganizersRepository';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native';
 import NavigationParamList from 'app/shared/NavigationParamList';
+import FollowIcon from 'app/shared/FollowIcon';
 
 const sortProps = [
     {
@@ -73,14 +74,9 @@ const OrganizersScreen = () => {
             <ListItem.Content>
                 <ListItem.Title>{organizer.name}</ListItem.Title>
             </ListItem.Content>
-            <Icon
-                name={organizer.following
-                    ? "star"
-                    : "star-outline"}
-                type="ionicon"
-                size={40}
-                color="gold"
-                onPress={() => toggleFollow(organizer)} />
+            <FollowIcon
+                following={organizer.following}
+                toggleFollow={() => toggleFollow(organizer)} />
         </ListItem>
     );
 

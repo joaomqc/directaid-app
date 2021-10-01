@@ -8,6 +8,10 @@ type Event = {
     picture: string,
     followers: number,
     [propName: string]: any,
+    organizer: {
+        id: number,
+        name: string
+    }
 }
 
 export default Event;
