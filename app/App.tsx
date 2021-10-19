@@ -9,6 +9,8 @@ import MessagesScreen from 'app/screens/MessagesScreen';
 import MutualAidScreen from 'app/screens/MutualAidScreen';
 import SidebarMenu from 'app/sidebar/SidebarMenu';
 import ProfileScreen from 'app/screens/ProfileScreen';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import graphqlConfig from '../graphql.json';
 
 const Drawer = createDrawerNavigator();
 
@@ -25,28 +27,35 @@ const theme = {
     }
 };
 
+const apolloClient = new ApolloClient({
+  uri: graphqlConfig.url,
+  cache: new InMemoryCache()
+});
+
 const App = () => {
     return (
         <SafeAreaProvider>
             <ThemeProvider theme={theme}>
-                <NavigationContainer>
-                    <Drawer.Navigator
-                        screenOptions={{ headerShown: false }}
-                        initialRouteName='Events'
-                        backBehavior='none'
-                        drawerContent={(props: any) => <SidebarMenu {...props} />}>
-                        <Drawer.Screen name='Events' component={EventsScreen} />
-                        <Drawer.Screen name='Forum' component={ForumScreen} />
-                        <Drawer.Screen
-                            name='MutualAid'
-                            component={MutualAidScreen}
-                            options={{
-                                drawerLabel: 'Mutual Aid'
-                            }} />
-                        <Drawer.Screen name='Messages' component={MessagesScreen} />
-                        <Drawer.Screen name='Profile' component={ProfileScreen} />
-                    </Drawer.Navigator>
-                </NavigationContainer>
+                <ApolloProvider client={apolloClient}>
+                    <NavigationContainer>
+                        <Drawer.Navigator
+                            screenOptions={{ headerShown: false }}
+                            initialRouteName='Events'
+                            backBehavior='none'
+                            drawerContent={(props: any) => <SidebarMenu {...props} />}>
+                            <Drawer.Screen name='Events' component={EventsScreen} />
+                            <Drawer.Screen name='Forum' component={ForumScreen} />
+                            <Drawer.Screen
+                                name='MutualAid'
+                                component={MutualAidScreen}
+                                options={{
+                                    drawerLabel: 'Mutual Aid'
+                                }} />
+                            <Drawer.Screen name='Messages' component={MessagesScreen} />
+                            <Drawer.Screen name='Profile' component={ProfileScreen} />
+                        </Drawer.Navigator>
+                    </NavigationContainer>
+                </ApolloProvider>
             </ThemeProvider>
         </SafeAreaProvider>
     );

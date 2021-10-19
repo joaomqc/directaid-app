@@ -3,10 +3,11 @@ import { StyleSheet, View, FlatList, Platform, TouchableNativeFeedback, Touchabl
 import { Card, ListItem } from 'react-native-elements';
 import Event from 'app/domain/Event';
 import EventsList from './EventsList';
-import { getEvents } from 'app/repositories/EventsRepository';
+import { GET_EVENTS } from 'app/repositories/EventsRepository';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import NavigationParamList from 'app/shared/NavigationParamList';
 import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
+import { useLazyQuery, useQuery } from '@apollo/client';
 
 const Component = Platform.select<typeof React.Component>({
     android: TouchableNativeFeedback,
@@ -16,32 +17,24 @@ const Component = Platform.select<typeof React.Component>({
 type EventScreenProp = NavigationProp<NavigationParamList, 'Event'>;
 
 const DiscoverScreen = () => {
+    const [events, setEvents] = useState<Event[]>([]);
+
+    const [loadOptions, { data, loading, error }] = useLazyQuery<Event[]>(GET_EVENTS);
 
     const eventNavigation = useNavigation<EventScreenProp>();
 
-    const [organizerEvents, setOrganizerEvents] = useState<Event[]>([]);
-    const [popularEvents, setPopularEvents] = useState<Event[]>([]);
+    const { data: organizerEventsData, loading: organizerEventsLoading, error: organizerEventsError } = useQuery<Event[]>(GET_EVENTS, { variables: { take: 5 } });
+    const { data: popularEventsData, loading: popularEventsLoading, error: popularEventsError } = useQuery<Event[]>(GET_EVENTS, { variables: { take: 5 } });
 
     useEffect(() => {
-        getEvents('', 'date')
-            .then((newEvents: Event[]) => {
-                setOrganizerEvents(newEvents);
-                setPopularEvents(newEvents);
-            });
-    }, []);
-
-    const [events, setEvents] = useState<Event[]>([]);
-    const [refreshing, setRefreshing] = useState(false);
+        if (loading === false && data) {
+            setEvents(data);
+        }
+    }, [loading, data])
 
     const updateEvents = (searchTerm: string, sortBy: string) => {
         if (!!searchTerm) {
-            setRefreshing(true);
-
-            getEvents(searchTerm, sortBy)
-                .then((newEvents: Event[]) => {
-                    setEvents(newEvents);
-                    setRefreshing(false);
-                });
+            loadOptions({ variables: { searchTerm, sortBy, following: true } });
         } else {
             setEvents([]);
         }
@@ -81,21 +74,21 @@ const DiscoverScreen = () => {
             events={events}
             onUpdateList={updateEvents}
             onUpdateEvent={updateEvent}
-            refreshing={refreshing}>
+            refreshing={loading}>
             <View>
                 <Card>
                     <Card.Title
                         style={styles.cardTitle}>
                         From organizers you follow
                     </Card.Title>
-                    {renderList(organizerEvents)}
+                    {renderList(organizerEventsData || [])}
                 </Card>
                 <Card>
                     <Card.Title
                         style={styles.cardTitle}>
                         Popular events
                     </Card.Title>
-                    {renderList(popularEvents)}
+                    {renderList(popularEventsData || [])}
                 </Card>
             </View>
         </EventsList>

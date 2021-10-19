@@ -8,11 +8,12 @@ import {
 import { ListItem, Avatar } from 'react-native-elements';
 import Organizer from 'app/domain/organizer';
 import ItemsList from 'app/shared/ItemsList';
-import { getFavoriteOrganizers, updateOrganizer } from 'app/repositories/OrganizersRepository';
+import { GET_ORGANIZERS, UPDATE_ORGANIZER_FOLLOW } from 'app/repositories/OrganizersRepository';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native';
 import NavigationParamList from 'app/shared/NavigationParamList';
 import FollowIcon from 'app/shared/FollowIcon';
+import { useLazyQuery, useMutation } from '@apollo/client';
 
 const sortProps = [
     {
@@ -43,7 +44,8 @@ const OrganizersScreen = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('name')
     const [organizers, setOrganizers] = useState<Organizer[]>([]);
-    const [refreshing, setRefreshing] = useState(false);
+    
+    const [loadOptions, { data, loading, error }] = useLazyQuery<Organizer[], any>(GET_ORGANIZERS);
 
     const toggleFollow = (organizer: Organizer) => {
         const updatedOrganizer = {
@@ -59,7 +61,7 @@ const OrganizersScreen = () => {
             return org;
         }));
 
-        updateOrganizer(updatedOrganizer);
+        useMutation(UPDATE_ORGANIZER_FOLLOW, { variables: { id: organizer.id, follow: updatedOrganizer.following } });
     };
 
     const renderEvent = (organizer: Organizer) => (
@@ -81,14 +83,14 @@ const OrganizersScreen = () => {
     );
 
     const updateOrganizers = () => {
-        setRefreshing(true);
-
-        getFavoriteOrganizers(searchTerm, sortBy)
-            .then((newOrganizers: Organizer[]) => {
-                setOrganizers(newOrganizers);
-                setRefreshing(false);
-            });
+        loadOptions({ variables: { searchTerm, sortBy, following: true } });
     }
+
+    useEffect(() => {
+        if(loading === false && data){
+            setOrganizers(data);
+        }
+    }, [loading, data])
 
     useEffect(() => {
         updateOrganizers();
@@ -106,7 +108,7 @@ const OrganizersScreen = () => {
                 onSearch={setSearchTerm}
                 searchTerm={searchTerm}
                 onRefresh={updateOrganizers}
-                refreshing={refreshing} />
+                refreshing={loading} />
         </View>
     );
 }

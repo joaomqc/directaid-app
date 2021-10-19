@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Event from 'app/domain/event';
-import { getFavoriteEvents } from 'app/repositories/EventsRepository';
+import { GET_EVENTS } from 'app/repositories/EventsRepository';
 import EventsList from './EventsList';
+import { useLazyQuery } from '@apollo/client';
 
 const FavoritesScreen = () => {
     const [events, setEvents] = useState<Event[]>([]);
-    const [refreshing, setRefreshing] = useState(false);
+
+    const [loadOptions, { data, loading, error }] = useLazyQuery<Event[]>(GET_EVENTS);
 
     const updateEvents = (searchTerm: string, sortBy: string) => {
-        setRefreshing(true);
-
-        getFavoriteEvents(searchTerm, sortBy)
-            .then((newEvents: Event[]) => {
-                setEvents(newEvents);
-                setRefreshing(false);
-            });
+        loadOptions({ variables: { searchTerm, sortBy, following: true } });
     }
 
     const updateEvent = (updatedEvent: Event) => {
@@ -27,12 +23,18 @@ const FavoritesScreen = () => {
         }));
     }
 
+    useEffect(() => {
+        if(loading === false && data){
+            setEvents(data);
+        }
+    }, [loading, data])
+
     return (
         <EventsList
             events={events}
             onUpdateList={updateEvents}
             onUpdateEvent={updateEvent}
-            refreshing={refreshing} />
+            refreshing={loading} />
     );
 }
 

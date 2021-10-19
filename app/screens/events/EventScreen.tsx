@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { getEvent, updateEvent } from 'app/repositories/EventsRepository';
+import { GET_EVENT, UPDATE_EVENT_FOLLOW } from 'app/repositories/EventsRepository';
 import NavigationParamList from 'app/shared/NavigationParamList';
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import { Icon, SpeedDial, ThemeProps, withTheme } from 'react-native-elements';
@@ -9,6 +9,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Event from 'app/domain/Event';
 import FollowIcon from 'app/shared/FollowIcon';
 import { RouteProp } from '@react-navigation/core';
+import { useMutation, useQuery } from '@apollo/client';
 
 var width = Dimensions.get('window').width;
 
@@ -23,9 +24,19 @@ const EventScreen = ({ theme, route }: Props) => {
     const { eventId } = route.params;
 
     const [event, setEvent] = useState<Event>();
+    const { data, loading, error } = useQuery<Event>(GET_EVENT, { variables: { id: eventId } })
+
     const [optionsOpen, setOptionsOpen] = useState(false);
 
     const navigation = useNavigation<EventsScreenProp>();
+
+    useEffect(() => {
+        if (!loading && data) {
+            setEvent(data);
+        } else if (!loading && error) {
+            onPressBack();
+        }
+    }, [loading, data, error])
 
     const onPressBack = () => {
         if (navigation.canGoBack()) {
@@ -46,20 +57,8 @@ const EventScreen = ({ theme, route }: Props) => {
         };
 
         setEvent(updatedEvent);
-        updateEvent(updatedEvent);
+        useMutation(UPDATE_EVENT_FOLLOW, { variables: { id: event.id, follow: updatedEvent.following } })
     }
-
-
-    useEffect(() => {
-        getEvent(eventId)
-            .then((event: Event | null) => {
-                if (!!event) {
-                    setEvent(event);
-                } else {
-                    onPressBack();
-                }
-            })
-    }, []);
 
     return (
         <View>

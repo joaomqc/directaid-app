@@ -9,10 +9,11 @@ import {
 import { ListItem, Avatar } from 'react-native-elements';
 import Event from 'app/domain/event';
 import ItemsList from 'app/shared/ItemsList';
-import { updateEvent } from 'app/repositories/EventsRepository';
+import { UPDATE_EVENT_FOLLOW } from 'app/repositories/EventsRepository';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import NavigationParamList from 'app/shared/NavigationParamList';
 import FollowIcon from 'app/shared/FollowIcon';
+import { useMutation } from '@apollo/client';
 
 const sortProps = [
     {
@@ -63,7 +64,7 @@ const EventsList = ({ events, onUpdateList, onUpdateEvent, refreshing, children 
 
         onUpdateEvent(updatedEvent);
 
-        updateEvent(updatedEvent);
+        useMutation(UPDATE_EVENT_FOLLOW, { variables: { id: event.id, follow: updatedEvent.following } })
     };
 
     const renderEvent = (event: Event) => (
