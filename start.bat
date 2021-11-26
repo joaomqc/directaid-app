@@ -1,2 +1,2 @@
-start yarn start
+start yarn start --reset-cache
 start yarn run android

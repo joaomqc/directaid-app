@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_EVENTS = gql`
-    query ($searchTerm: String, $sortBy: String, $followingOnly: $Boolean, skip: $skip, take: $take) {
+    query ($searchTerm: String, $sortBy: String, $followingOnly: Boolean, $skip: Int, $take: Int) {
         events (
             searchTerm: $searchTerm,
             sortBy: $sortBy,
@@ -15,7 +15,7 @@ export const GET_EVENTS = gql`
             location,
             following,
             followers,
-            organizer: {
+            organizer {
                 id,
                 name
             }
@@ -34,7 +34,7 @@ export const GET_EVENT = gql`
             location,
             following,
             followers,
-            organizer: {
+            organizer {
                 id,
                 name
             }

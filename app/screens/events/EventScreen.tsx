@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { GET_EVENT, UPDATE_EVENT_FOLLOW } from 'app/repositories/EventsRepository';
 import NavigationParamList from 'app/shared/NavigationParamList';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, Alert } from 'react-native';
 import { Icon, SpeedDial, ThemeProps, withTheme } from 'react-native-elements';
 import AutoHeightImage from 'react-native-auto-height-image';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -31,10 +31,18 @@ const EventScreen = ({ theme, route }: Props) => {
     const navigation = useNavigation<EventsScreenProp>();
 
     useEffect(() => {
-        if (!loading && data) {
-            setEvent(data);
-        } else if (!loading && error) {
-            onPressBack();
+        if (!loading) {
+            if (data) {
+                setEvent(data);
+            }
+
+            if (error) {
+                Alert.alert(
+                    "Error",
+                    error.message
+                )
+                onPressBack();
+            }
         }
     }, [loading, data, error])
 

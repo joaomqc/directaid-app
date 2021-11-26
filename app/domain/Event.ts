@@ -1,8 +1,8 @@
 type Event = {
     id: number,
     title: string,
-    creationDate: Date,
-    date: Date,
+    creationDate: string,
+    date: string,
     location: string,
     following: boolean,
     picture: string,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, FlatList, Platform, TouchableNativeFeedback, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, FlatList, Platform, TouchableNativeFeedback, TouchableHighlight, Alert } from 'react-native';
 import { Card, ListItem } from 'react-native-elements';
 import Event from 'app/domain/Event';
 import EventsList from './EventsList';
@@ -27,10 +27,18 @@ const DiscoverScreen = () => {
     const { data: popularEventsData, loading: popularEventsLoading, error: popularEventsError } = useQuery<Event[]>(GET_EVENTS, { variables: { take: 5 } });
 
     useEffect(() => {
-        if (loading === false && data) {
-            setEvents(data);
+        if (!loading) {
+            if (data) {
+                setEvents(data);
+            }
+            if (error) {
+                Alert.alert(
+                    "Error",
+                    error.message
+                )
+            }
         }
-    }, [loading, data])
+    }, [loading, data, error])
 
     const updateEvents = (searchTerm: string, sortBy: string) => {
         if (!!searchTerm) {

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_ORGANIZERS = gql`
-    query ($searchTerm: String, $sortBy: String, $followingOnly: $Boolean) {
+    query ($searchTerm: String, $sortBy: String, $followingOnly: Boolean) {
         organizers (
             searchTerm: $searchTerm,
             sortBy: $sortBy,

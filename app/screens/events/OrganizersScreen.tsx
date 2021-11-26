@@ -3,7 +3,8 @@ import {
     View,
     Platform,
     TouchableNativeFeedback,
-    TouchableHighlight
+    TouchableHighlight,
+    Alert
 } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import Organizer from 'app/domain/organizer';
@@ -44,7 +45,7 @@ const OrganizersScreen = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('name')
     const [organizers, setOrganizers] = useState<Organizer[]>([]);
-    
+
     const [loadOptions, { data, loading, error }] = useLazyQuery<Organizer[], any>(GET_ORGANIZERS);
 
     const toggleFollow = (organizer: Organizer) => {
@@ -83,14 +84,29 @@ const OrganizersScreen = () => {
     );
 
     const updateOrganizers = () => {
-        loadOptions({ variables: { searchTerm, sortBy, following: true } });
+        loadOptions({
+            variables: {
+                searchTerm,
+                sortBy,
+                followingOnly: false //TODO: dependent on user login
+            }
+        });
     }
 
     useEffect(() => {
-        if(loading === false && data){
-            setOrganizers(data);
+        if (!loading) {
+            if (data) {
+                setOrganizers(data);
+            }
+
+            if (error) {
+                Alert.alert(
+                    "Error",
+                    error.message
+                )
+            }
         }
-    }, [loading, data])
+    }, [loading, data, error])
 
     useEffect(() => {
         updateOrganizers();

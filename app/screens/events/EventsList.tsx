@@ -67,26 +67,27 @@ const EventsList = ({ events, onUpdateList, onUpdateEvent, refreshing, children 
         useMutation(UPDATE_EVENT_FOLLOW, { variables: { id: event.id, follow: updatedEvent.following } })
     };
 
-    const renderEvent = (event: Event) => (
-
-        <ListItem
-            bottomDivider
-            onPress={() => { eventNavigation.navigate('Event', { eventId: event.id }) }}
-            Component={Component}
-        >
-            <Avatar
-                size="large"
-                source={require('../../../images/placeholder-image.png')} />
-            <ListItem.Content>
-                <ListItem.Title>{event.title}</ListItem.Title>
-                <ListItem.Subtitle>{event.location}</ListItem.Subtitle>
-                <ListItem.Subtitle>{event.date.toLocaleDateString()}</ListItem.Subtitle>
-            </ListItem.Content>
-            <FollowIcon
-                following={event.following}
-                toggleFollow={() => toggleFollow(event)} />
-        </ListItem>
-    );
+    const renderEvent = (event: Event) => {
+        return (
+            <ListItem
+                bottomDivider
+                onPress={() => { eventNavigation.navigate('Event', { eventId: event.id }) }}
+                Component={Component}
+            >
+                <Avatar
+                    size="large"
+                    source={require('../../../images/placeholder-image.png')} />
+                <ListItem.Content>
+                    <ListItem.Title>{event.title}</ListItem.Title>
+                    <ListItem.Subtitle>{event.location}</ListItem.Subtitle>
+                    <ListItem.Subtitle>{new Date(event.date).toLocaleDateString()}</ListItem.Subtitle>
+                </ListItem.Content>
+                <FollowIcon
+                    following={event.following}
+                    toggleFollow={() => toggleFollow(event)} />
+            </ListItem>
+        )
+    };
 
     const updateEvents = () => {
         onUpdateList(searchTerm, sortBy);
