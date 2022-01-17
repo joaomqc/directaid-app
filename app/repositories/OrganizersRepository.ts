@@ -8,7 +8,8 @@ export const GET_ORGANIZERS = gql`
             followingOnly: $followingOnly
         ){
             id,
-            name
+            name,
+            following
         }
     }
 `;

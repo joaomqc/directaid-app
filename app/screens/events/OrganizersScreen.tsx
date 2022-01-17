@@ -46,7 +46,7 @@ const OrganizersScreen = () => {
     const [sortBy, setSortBy] = useState('name')
     const [organizers, setOrganizers] = useState<Organizer[]>([]);
 
-    const [loadOptions, { data, loading, error }] = useLazyQuery<Organizer[], any>(GET_ORGANIZERS);
+    const [loadOptions, { data, loading, error }] = useLazyQuery<{ organizers: Organizer[] }, any>(GET_ORGANIZERS);
 
     const toggleFollow = (organizer: Organizer) => {
         const updatedOrganizer = {
@@ -96,7 +96,7 @@ const OrganizersScreen = () => {
     useEffect(() => {
         if (!loading) {
             if (data) {
-                setOrganizers(data);
+                setOrganizers(data.organizers);
             }
 
             if (error) {
@@ -119,7 +119,7 @@ const OrganizersScreen = () => {
                 sortProps={sortProps}
                 items={organizers}
                 render={renderEvent}
-                keyExtractor={organizer => organizer.name + organizer.creationDate}
+                keyExtractor={organizer => organizer.id}
                 onSort={setSortBy}
                 onSearch={setSearchTerm}
                 searchTerm={searchTerm}
